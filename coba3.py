@@ -34,7 +34,10 @@ except Exception as e:
 
 # Create a cursor object untuk memakai perintah seperti execute guna menampilkan table
 cur = conn.cursor()
-
+# curr = cur.execute(f"SELECT air_flow FROM public.m0101_quadro_2")
+# curr = cur.execute(f"SELECT datetime, air_flow, inlet_temp, outlet_temp FROM public.m0101_dfx1200_01 WHERE datetime BETWEEN 2023-04-11 AND 2023-04-11")
+# print(curr)
+# exit(0)
 
 
 # Create the main window of the application
@@ -58,7 +61,7 @@ def generate_report():
     end_time = end_time_picker.get().replace(":", "") + "00"
 
     # Fetch data from the database for the selected date and time range
-    cur.execute(f"SELECT datetime, air_flow, inlet_temp, outlet_temp FROM public.{table_name} WHERE datetime BETWEEN '{start_date} {start_time}' AND '{end_date} {end_time}'")
+    cur.execute(f"SELECT datetime, rpm, epoc, id FROM public.{table_name} WHERE datetime BETWEEN '{start_date} {start_time}' AND '{end_date} {end_time}'")
     rows = cur.fetchall()
 
     # Convert the data into a Pandas dataframe
@@ -164,7 +167,7 @@ name.pack()
 
 table_list_label = Label(root, text="Table List:")
 table_list_label.pack()
-table_list = ttk.Combobox(root, values=["m0101_dfx1200_01"])
+table_list = ttk.Combobox(root, values=["m0101_dfx1200_01","m0101_quadro_2"])
 table_list.current(0)
 table_list.pack()
 

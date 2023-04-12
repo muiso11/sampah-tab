@@ -13,7 +13,7 @@ class KegiatanModel extends Model{
     protected $returnType     = 'array';
     protected $useSoftDeletes = FALSE;
 
-    protected $allowedFields = ['username','kode_keg','dari','panggil_teknik','datang_teknik','selesai','durasi','aktivitas','masalah','tindakan','no_schedule','batch','kode_produk','good','defect'];
+    protected $allowedFields = ['mesinID','kode_keg','dari','panggil_teknik','datang_teknik','selesai','durasi','aktivitas','masalah','tindakan','no_schedule','batch','kode_produk','good','defect'];
     
     protected $useTimestamps = TRUE;
 }

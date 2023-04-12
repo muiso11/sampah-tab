@@ -8,16 +8,26 @@
             <div class="main-menu">
                 <div class="menu-inner">
                     <nav>
-                        <ul class="metismenu" id="menu">
+                        <ul class="metismenu" id="menu">                            
+                            <h4 style="color: white; margin-left:30px">Admin</h4>
+                            <hr style="border:1px solid white">
+                            <li class="active">
+                                <ul class="collapse">
+                                    <li><a href="akun">Karyawan</a></li>                                    
+                                    <li><a href="pengajuan">Edit Fitur</a></li>                                    
+                                </ul>
+                            </li>                            
+                            <h4 style="color: white; margin-left:30px">TKL Digital</h4>
+                            <hr style="border:1px solid white">
                             <li class="active">
                                 <ul class="collapse">
                                     <li><a href="#">Profile</a></li>
-                                    <li><a href="dashboard">Dashboard</a></li>
-                                    <li><a href="pengajuan">Pengajuan Edit Data</a></li>
+                                    <li><a href="tabel-tkl">Table TKL</a></li>
+                                    <li><a href="form">Form TKL</a></li>
                                     <li><a href="logout">Logout</a></li>
                                 </ul>
                             </li>                            
-                        </ul>
+                        </ul>                        
                     </nav>
                 </div>
             </div>

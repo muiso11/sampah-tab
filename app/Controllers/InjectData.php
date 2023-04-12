@@ -57,6 +57,24 @@ class InjectData extends BaseController
         ],[
             'kode_mesin'=> 'K219',                    
             'nama_mesin'=> 'HM3 L8A'
+        ],[
+            'kode_mesin'=> 'K219',                    
+            'nama_mesin'=> 'HM3 L8A'
+        ],[
+            'kode_mesin'=> 'K219',                    
+            'nama_mesin'=> 'HM3 L8A'
+        ],[
+            'kode_mesin'=> 'K219',                    
+            'nama_mesin'=> 'HM3 L8A'
+        ],[
+            'kode_mesin'=> 'K219',                    
+            'nama_mesin'=> 'HM3 L8A'
+        ],[
+            'kode_mesin'=> 'K219',                    
+            'nama_mesin'=> 'HM3 L8A'
+        ],[
+            'kode_mesin'=> 'K219',                    
+            'nama_mesin'=> 'HM3 L8A'
             ]
         ];
         $role = [
@@ -89,50 +107,96 @@ class InjectData extends BaseController
             'aktivitas' => 'Cartoning blister magazine area',
             'durasi'    => 20,
             'mesinID'   => 3,
+        ],[
+            'kode_keg'  => 7,            
+            'aktivitas' => 'cusu',
+            'durasi'    => 20,
+            'mesinID'   => 1,
+        ],[
+            'kode_keg'  => 7,            
+            'aktivitas' => 'gbn',
+            'durasi'    => 20,
+            'mesinID'   => 1,
             ]
         ];
-        $form = [
-            [
-            'username'  => 'muiso',
-            'mesinID'   => '1',
-            'tanggal'   => '2023-03-05',
-            'nama'      => 'mui',
-            'shift'     => 1,
-            'status'    => 1
-            ],[
-            'username'  => 'admin',
-            'mesinID'   => '1',
-            'tanggal'   => '2023-03-05',
-            'nama'      => 'adm',
-            'shift'     => 1,
-            'status'    => 1
-            ]
-        ];
-        $keg = [
-            [
-            'username'  => 'muiso',
-            'kode_keg'  => '1',
-            'dari'      => '01:01:00',            
-            'selesai'   => '01:11:00',
-            'durasi'    => 10,
-            'aktivitas' => 'run',
-            'no_schedule' => '2341241'
-            ],[
-            'username'  => 'admin',
-            'kode_keg'  => '1',
-            'dari'      => '01:01:00',            
-            'selesai'   => '01:11:00',
-            'durasi'    => 10,
-            'aktivitas' => 'run',
-            'no_schedule' => '2341241'
-            ]
-        ];
+        // $form = [
+        //     [
+        //     'username'  => 'muiso',
+        //     'mesinID'   => '2',
+        //     'tanggal'   => '2023-03-05',
+        //     'nama'      => 'mui',
+        //     'shift'     => 1,
+        //     'no_schedule' => '2341241',
+        //     'kode_produk' => 'TPGRS',
+        //     'batch' => 'TP123S',
+        //     'status'    => FALSE
+        //     ],[            
+        //     'username'  => 'muiso',
+        //     'mesinID'   => '2',
+        //     'tanggal'   => '2023-03-05',
+        //     'nama'      => 'mui',
+        //     'shift'     => 1,
+        //     'no_schedule' => '2341242',
+        //     'kode_produk' => 'TPGRE',
+        //     'batch' => 'TP123W',
+        //     'status'    => FALSE
+        //     ],[
+        //     'username'  => 'admin',
+        //     'mesinID'   => '1',
+        //     'tanggal'   => '2023-03-05',
+        //     'nama'      => 'adm',
+        //     'shift'     => 1,
+        //     'no_schedule' => '234124',
+        //     'kode_produk' => 'TPGR',
+        //     'batch' => 'TP123',
+        //     'status'    => TRUE
+        //     ]
+        // ];
+        // $keg = [
+        //     [
+        //     'kode_keg'  => '1',
+        //     'dari'      => '01:01:00',            
+        //     'selesai'   => '01:11:00',
+        //     'durasi'    => 10,
+        //     'aktivitas' => 'run',
+        //     'no_schedule' => '2341241',
+        //     'kode_produk' => 'TPGRS',
+        //     'batch' => 'TP123S'
+        //     ],[
+        //     'kode_keg'  => '2',
+        //     'dari'      => '01:01:00',            
+        //     'selesai'   => '01:11:00',
+        //     'durasi'    => 10,
+        //     'aktivitas' => 'Goo',
+        //     'no_schedule' => '2341242',
+        //     'kode_produk' => 'TPGRE',
+        //     'batch' => 'TP123W'
+        //     ],[
+        //     'kode_keg'  => '1',
+        //     'dari'      => '01:01:00',            
+        //     'selesai'   => '01:11:00',
+        //     'durasi'    => 10,
+        //     'aktivitas' => 'run',
+        //     'no_schedule' => '2341242',
+        //     'kode_produk' => 'TPGRE',
+        //     'batch' => 'TP123W',
+        //     ],[
+        //     'kode_keg'  => '1',
+        //     'dari'      => '01:01:00',            
+        //     'selesai'   => '01:11:00',
+        //     'durasi'    => 10,
+        //     'aktivitas' => 'run',
+        //     'no_schedule' => '234124',
+        //     'kode_produk' => 'TPGR',
+        //     'batch' => 'TP123',
+        //     ]
+        // ];
         $this->accountModel->insertBatch($akun);
         $this->mesinModel->insertBatch($mesin);
         $this->roleModel->insertBatch($role);
         $this->lovModel->insertBatch($lov);
-        $this->formModel->insertBatch($form);
-        $this->kegiatanModel->insertBatch($keg);        
+        // $this->formModel->insertBatch($form);
+        // $this->kegiatanModel->insertBatch($keg);        
         var_dump("Berhasil gannn");die;
     }
     public function tampil()

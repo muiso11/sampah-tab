@@ -15,11 +15,11 @@ class Kegiatan extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'username' => [
-                'type'          => 'VARCHAR',
-                'constraint'    => 50,
-                'null'         => false,
-            ],            
+            'mesinID' => [
+                'type'          => 'INT',
+                'constraint'     => 2,
+                'null'         => FALSE,
+            ],                        
             'kode_keg' => [
                 'type'          => 'VARCHAR',
                 'constraint'    => 1,
@@ -48,7 +48,7 @@ class Kegiatan extends Migration
             ],            
             'aktivitas' => [
                 'type'          => 'VARCHAR',
-                'constraint'    => 20,
+                'constraint'    => 100,
                 'null'         => false,
             ],
             'masalah' => [
@@ -75,13 +75,13 @@ class Kegiatan extends Migration
                 'null'         => true,                
             ],
             'good' => [
-                'type'          => 'VARCHAR',                
-                'constraint'    => 10,
+                'type'          => 'INT',                
+                'constraint'    => 11,
                 'null'         => true,                
             ],
             'defect' => [
-                'type'          => 'VARCHAR',                
-                'constraint'    => 10,
+                'type'          => 'INT',                
+                'constraint'    => 11,
                 'null'         => true,                
             ],
             'created_at' => [

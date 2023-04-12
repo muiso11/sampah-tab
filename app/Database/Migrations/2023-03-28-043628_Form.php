@@ -38,8 +38,23 @@ class Form extends Migration
                 'type'          => 'TINYINT',                
                 'null'         => FALSE,
             ],                             
+            'no_schedule' => [
+                'type'          => 'VARCHAR',                
+                'constraint'    => 20,
+                'null'         => FALSE,
+            ],                             
+            'kode_produk' => [
+                'type'          => 'VARCHAR',                
+                'constraint'    => 10,
+                'null'         => FALSE,
+            ],                             
+            'batch' => [
+                'type'          => 'VARCHAR',                
+                'constraint'    => 20,
+                'null'         => FALSE,
+            ],                             
             'status' => [
-                'type'          => 'TINYINT',                
+                'type'          => 'BOOLEAN',                
                 'null'         => FALSE,
             ],   
             'created_at' => [

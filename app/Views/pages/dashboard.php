@@ -7,14 +7,14 @@
                     <div class="col-12">                        
                         <div class="add-button d-flex justify-content-center">
                             <!-- Trigger Modal -->
-                            <!-- <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
-                                data-target="#exampleModalLong">Tambah
-                                Data</button> -->
-                            <a href="isi_form"><button type="button" class="btn btn-primary mb-3">Tambah Data</button></a>
+                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
+                                data-target="#tambahData">Tambah
+                                Data</button>
+                            <!-- <a href="isi_form"><button type="button" class="btn btn-primary mb-3">Tambah Data</button></a> -->
                         </div>
                     </div>
                     <div class="col-12">
-                        <?php if($data_mesin):?> 
+                        <?php if($data_form):?> 
                         <h4 class="header-title">Tabel Haha Hihi</h4>
                         <div class="single-table">
                             <div class="table-responsive">
@@ -41,7 +41,7 @@
                                     </thead>
                                     <tbody>                                        
                                                                                    
-                                        <?php $i=1; foreach($data_mesin as $data) : ?>
+                                        <?php $i=1; foreach($data_form as $data) : ?>
                                             <tr>
                                                 <td><?= $i++;?></td>                 
                                                 <td><?= ($data['kode_keg'] == NULL)?'-':$data['kode_keg']?></td>                
@@ -58,12 +58,8 @@
                                                 <td><?= ($data['batch'] == NULL)?'-':$data['batch']?></td>                
                                                 <td><?= ($data['good'] == NULL)?'-':$data['good']?></td>                
                                                 <td><?= ($data['defect'] == NULL)?'-':$data['defect']?></td>                                                                                                                  
-                                                <td>
-                                                    <?php if($data['status'] == 1) : ?>
-                                                        <button type="button" class="btn btn-warning mb-3" data-toggle="modal" data-target="#edit_<?= $data['id']?>">Edit Data</button>
-                                                    <?php else :?>
-                                                        <?= $data['keterangan']?>
-                                                    <?php endif;?>
+                                                <td>                                                    
+                                                    <button type="button" class="btn btn-warning mb-3" data-toggle="modal" data-target="#edit_<?= $data['id']?>">Edit Data</button>
                                                 </td>
                                             </tr>                                            
                                         <?php endforeach;?>                                                                                
@@ -72,7 +68,7 @@
                             </div>
                         </div>
                         
-                        <form action="">                            
+                        <form action="form/fix" method="GET">                            
                             <div class="d-flex justify-content-around mt-4">
                                 <div class="form-group d-flex">
                                     <label for="tanggal" class="col-form-label" style="margin-right: 20px;">Tanggal: </label>
@@ -80,12 +76,13 @@
                                 </div>
                                 <div class="form-group d-flex">
                                     <label for="shift" class="col-form-label" style="margin-right: 20px;">Shift: </label>
-                                    <input class="form-control" type="text" id="shift" name="shift" placeholder="<?= $data_mesin[0]['shift']?>">
+                                    <input class="form-control" type="text" id="shift" name="shift" placeholder="<?= $data_form[0]['shift']?>">
                                 </div>
                                 <div class="form-group d-flex">
                                     <label for="nama" class="col-form-label" style="margin-right: 20px;">Nama: </label>
-                                    <input class="form-control" type="text" id="nama" name="nama" placeholder="<?= $data_mesin[0]['nama']?>">
+                                    <input class="form-control" type="text" id="nama" name="nama" placeholder="<?= $data_form[0]['nama']?>">
                                 </div>
+                                <input type="hidden" name="status" id="status" value="TRUE">
                                 <button class="btn btn-success" style="height:45px">Submit!!</button>                                                          
                             </div>
                         </form>

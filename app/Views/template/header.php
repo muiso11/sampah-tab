@@ -7,12 +7,12 @@
     <title><?= $tittle; ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="assets/images/icon/favicon.ico">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/metisMenu.css">
-    <link rel="stylesheet" href="assets/css/default-css.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/metisMenu.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/default-css.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/styles.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/responsive.css">
 </head>
 
 <body>

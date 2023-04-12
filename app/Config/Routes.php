@@ -31,8 +31,11 @@ $routes->set404Override();
 // route since we don't have to scan directories.
 // $routes->get('/', 'Home::index');
 $routes->get('/', 'AuthC::login');
-$routes->get('/form', 'FormC::index');
+$routes->get('/form', 'FormC::form');
+$routes->post('/form/add', 'FormC::formAdd');
+$routes->add('/form/fix', 'FormC::formFix');
 $routes->get('/first', 'FormC::first');
+$routes->post('/first/add', 'FormC::firstAdd');
 $routes->get('/isi_form', 'FormC::isi');
 // $routes->get('/dashboard', 'Dashboard::index');
 // $routes->add('/dashboard/add', 'Dashboard::add_data');
@@ -56,6 +59,9 @@ $routes->get('/coba','InjectData::cobaAjax');
 $routes->get('/form1','InjectData::form1');
 $routes->get('/form2','InjectData::form2');
 $routes->get('/form3','InjectData::form3');
+
+$routes->get('/tabel-tkl','AdminC::index');
+$routes->get('/tabel-tkl/(:num)','AdminC::coba/$1');
 
 
 /*

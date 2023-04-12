@@ -13,15 +13,18 @@ class FormModel extends Model{
     protected $returnType     = 'array';
     protected $useSoftDeletes = FALSE;
 
-    protected $allowedFields = ['username','mesinID','tanggal','nama','shift','status'];
+    protected $allowedFields = ['username','mesinID','tanggal','nama','shift','no_schedule','kode_produk','batch','status'];
     
     protected $useTimestamps = TRUE;
 
-    public function getAll()
+    public function getAll($nama = NULL,$mesinID = 1,$status = TRUE)
     {
         $builder = $this->db->table('form');
         $builder->select('*');
-        $builder->join('kegiatan', 'kegiatan.username = form.username','left');
+        $builder->join('kegiatan', 'kegiatan.no_schedule = form.no_schedule','right');
+        $builder->where('form.nama',$nama);        
+        $builder->where('form.mesinID',$mesinID);        
+        $builder->where('status',$status);
         $query = $builder->get();
         return $query->getResultArray();
     }

@@ -5,7 +5,13 @@
             <div class="card-body">
                 <div class="row no-gutters">
                     <div class="col-12">   
-                        <form action="/form/add" method="POST">                        
+                        <form action="/first/add" method="POST">                        
+                            <div class="form-group">
+                                <label for="tanggal"
+                                    class="col-form-label">Tanggal</label>
+                                <input class="form-control" type="date" value="<?= date('Y-m-d')?>"
+                                    id="tanggal" name="tanggal">
+                            </div>
                             <div class="form-group">
                                 <label for="nama" class="col-form-label">Nama
                                     Operator</label>

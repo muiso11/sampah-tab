@@ -36,7 +36,7 @@ class AuthC extends BaseController
                     // var_dump($account['password'] == $password);die; // Check apakah berhasil atau tidak
                     $dataAkun = [
                         // 'id'        => $account['id'],
-                        'nama'      => $account['nama'],
+                        'username'      => $account['nama'],
                         // 'password'  => $account['password'],
                         'role'      => $account['role'],
                         'mesinID'   => $account['mesinID']
