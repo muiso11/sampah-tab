@@ -15,6 +15,14 @@ class Account extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],                        
+            'created_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],        
+            'updated_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],
             'nama' => [
                 'type'          => 'VARCHAR',
                 'constraint'    => 50,
@@ -34,15 +42,7 @@ class Account extends Migration
                 'constraint'    => 10,
                 'null'         => FALSE,
                 'default'       => 'user'
-            ],
-            'created_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ],        
-            'updated_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ]        
+            ]                    
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('account');

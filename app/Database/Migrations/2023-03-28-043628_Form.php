@@ -14,6 +14,14 @@ class Form extends Migration
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
+            ],
+            'created_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],        
+            'updated_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
             ],   
             'username' => [
                 'type'          => 'VARCHAR',
@@ -56,15 +64,7 @@ class Form extends Migration
             'status' => [
                 'type'          => 'BOOLEAN',                
                 'null'         => FALSE,
-            ],   
-            'created_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ],        
-            'updated_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ]        
+            ],                       
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('form');

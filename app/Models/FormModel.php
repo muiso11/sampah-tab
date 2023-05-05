@@ -20,7 +20,7 @@ class FormModel extends Model{
     public function getAll($nama = NULL,$mesinID = 1,$status = TRUE)
     {
         $builder = $this->db->table('form');
-        $builder->select('*');
+        $builder->select('kegiatan.*');
         $builder->join('kegiatan', 'kegiatan.no_schedule = form.no_schedule','right');
         $builder->where('form.nama',$nama);        
         $builder->where('form.mesinID',$mesinID);        

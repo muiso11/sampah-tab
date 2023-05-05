@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class Lov extends Migration
+class Header extends Migration
 {
     public function up()
     {
@@ -14,7 +14,7 @@ class Lov extends Migration
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
-            ],            
+            ],
             'created_at' => [
                 'type'  => 'DATETIME',
                 'null'  => true
@@ -22,34 +22,39 @@ class Lov extends Migration
             'updated_at' => [
                 'type'  => 'DATETIME',
                 'null'  => true
-            ],            
-            'kode_kegiatan' => [
+            ],        
+            'edit' => [
+                'type'          => 'BOOLEAN',                
+                'default'       => TRUE,
+            ],                
+            'tipe' => [
                 'type'          => 'VARCHAR',
-                'constraint'     => 2,
+                'constraint'     => 10,
                 'null'         => FALSE,
             ],            
-            'aktivitas' => [
+            // 'panjang_karakter' => [
+            //     'type'          => 'INT',
+            //     'constraint'     => 4,
+            //     'null'         => TRUE,
+            // ],            
+            'nama_header' => [
                 'type'          => 'VARCHAR',
-                'constraint'    => 50,
-                'null'         => FALSE,
-            ],                                                
-            'durasi' => [
-                'type'          => 'INT',
-                'constraint'     => 3,
+                'constraint'     => 100,
                 'null'         => FALSE,
             ],            
-            'mesinID' => [
-                'type'          => 'INT',                
+            'panjang_inputbox' => [
+                'type'          => 'VARCHAR',
+                'constraint'    => 10,
                 'null'         => FALSE,
-            ],                                
+            ],                                                                            
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('lov');
+        $this->forge->createTable('header');
 
     }
 
     public function down()
     {
-        $this->forge->dropTable('lov');
+        $this->forge->dropTable('header');
     }
 }

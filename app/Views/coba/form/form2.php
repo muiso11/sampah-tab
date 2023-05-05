@@ -99,7 +99,7 @@
 
 <!-- main content area end -->
 <script>
-    var modal = document.getElementById("firstM");
+    var modal = document.getElementById("firstM");    
     
     window.onload = function() {
         $('#firstM').modal('show')
@@ -136,7 +136,7 @@
 
             // const productUl = document.getElementById("halo");
             // productUl.appendChild(productLi);
-            if(product.kode_keg == selectedValue){
+            if(product.kode_keg == selectedValue){                
                 parentElement.appendChild(productLi)
             }        
         }

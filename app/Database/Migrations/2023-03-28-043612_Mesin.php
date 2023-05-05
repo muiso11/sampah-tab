@@ -15,6 +15,14 @@ class Mesin extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],                        
+            'created_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],        
+            'updated_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],
             'kode_mesin' => [
                 'type'          => 'VARCHAR',
                 'constraint'     => 20,
@@ -24,15 +32,7 @@ class Mesin extends Migration
                 'type'          => 'VARCHAR',
                 'constraint'    => 100,
                 'null'         => FALSE,
-            ],                                                
-            'created_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ],        
-            'updated_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ]        
+            ],                                                                    
         ]);
         $this->forge->addKey('mesinID', true);
         $this->forge->createTable('mesin');

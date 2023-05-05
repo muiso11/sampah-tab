@@ -13,8 +13,8 @@
                             <hr style="border:1px solid white">
                             <li class="active">
                                 <ul class="collapse">
-                                    <li><a href="akun">Karyawan</a></li>                                    
-                                    <li><a href="pengajuan">Edit Fitur</a></li>                                    
+                                    <li><a href="akun">Karyawan</a></li>                                                                        
+                                    <li><a href="struktur-table">Struktur Table</a></li>                                    
                                 </ul>
                             </li>                            
                             <h4 style="color: white; margin-left:30px">TKL Digital</h4>

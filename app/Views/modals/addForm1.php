@@ -20,14 +20,14 @@
                         <div class="col-2">
                             <div class="form-group">
                                 <label class="col-form-label">Kode Kegiatan</label>
-                                <select class="form-control" style="height: 47px;" id="kode_keg" name="kode_keg">
+                                <select class="form-control" style="height: 47px;" id="kode_kegiatan" name="kode_kegiatan">
                                 <option> Pilih Kode</option>
                                 <?php $kode = NULL;?>
                                     <?php foreach($lovs as $lov):?>
-                                        <?php if($kode != $lov['kode_keg']):?>
-                                            <option value="<?= $lov['kode_keg']?>"><?= $lov['kode_keg']?></option>
+                                        <?php if($kode != $lov['kode_kegiatan']):?>
+                                            <option value="<?= $lov['kode_kegiatan']?>"><?= $lov['kode_kegiatan']?></option>
                                         <?php endif;?>
-                                        <?php $kode = $lov['kode_keg']?>
+                                        <?php $kode = $lov['kode_kegiatan']?>
                                     <?php endforeach;?>
                                 </select>
                             </div>
@@ -82,8 +82,7 @@
                                 <input class="form-control" type="text" id="tindakan" name="tindakan">                                        
                             </div>                                    
                         </div>  
-                        <div class="col-12">
-                            <div class="row d-flex justify-content-center">                            
+                                                   
                                 <div class="col-2">
                                     <div class="form-group">
                                         <label for="example-text-input" class="col-form-label">No Schedule</label>
@@ -113,9 +112,7 @@
                                         <label for="example-text-input" class="col-form-label">Defect</label>
                                         <input class="form-control" type="text" id="defect" name="defect" value="0">                                        
                                     </div>                                    
-                                </div> 
-                            </div>
-                        </div>
+                                </div>                             
                          
                     </div>  
 
@@ -127,13 +124,12 @@
     </div>
 <!-- End Modal -->
 <script>
-    var modal = document.getElementById("tambahData");
-    
+    var modal = document.getElementById("tambahData");    
     window.onload = function() {
         // $('#exampleModalLong').modal('show')
     }
     // Variable untuk mendapatkan elemen ID HTML
-    var kode_keg = document.getElementById("kode_keg");
+    var kode_kegiatan = document.getElementById("kode_kegiatan");
     var dari = document.getElementById("dari");
     var selesai = document.getElementById("selesai");        
     const parentElement = document.getElementById("aktivitas");   
@@ -141,10 +137,12 @@
     let no_schedule = document.getElementById('no_schedule');
     let kode_produk = document.getElementById('kode_produk');
     let batch = document.getElementById('batch');
+    let good = document.getElementById('good');
+    let defect = document.getElementById('defect');
     let selectedValue;
 
     // Melakukan pengambilan data API menggunakan AJAX dan menambahkan elemen option ke HTML
-    kode_keg.addEventListener('change', function() {
+    kode_kegiatan.addEventListener('change', function() {
         // Variable untuk mengaktifkan AJAX
         var xhr = new XMLHttpRequest();
         
@@ -169,7 +167,7 @@
 
             // const productUl = document.getElementById("halo");
             // productUl.appendChild(productLi);
-            if(product.kode_keg == selectedValue){
+            if(product.kode_kegiatan == selectedValue){
                 parentElement.appendChild(productLi)
             }        
         }
@@ -194,10 +192,14 @@
             no_schedule.disabled = false;
             kode_produk.disabled = false;
             batch.disabled = false;
+            good.disabled = false;
+            defect.disabled = false;
         }else{
             no_schedule.disabled = true;
             kode_produk.disabled = true;
             batch.disabled = true;
+            good.disabled = true;
+            defect.disabled = true;
         }
     });
 
@@ -208,7 +210,7 @@
         let jamD = Math.abs(sDari[0]-12);
         let jamS = Math.abs(sSampai[0]-12);        
 
-        let hitung = (jamS * 60 + sSampai[1] * 1) - (jamD * 60 + sDari[1] * 1)
+        let hitung = (jamS * 60 + sSampai[1]) - (jamD * 60 + sDari[1])
 
         durasi.value = Math.abs(hitung);
         // document.getElementById("durasi").value = Math.abs(hitung);

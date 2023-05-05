@@ -8,7 +8,7 @@
                         data-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-info" role="alert">
+                    <div class="alert alert-info" role="alert">                        
                         <strong>Perhatikan</strong> Data diatas dengan benar dan
                         sesuai
                         dengan profil anda <br>

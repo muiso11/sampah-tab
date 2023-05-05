@@ -63,6 +63,16 @@ $routes->get('/form3','InjectData::form3');
 $routes->get('/tabel-tkl','AdminC::index');
 $routes->get('/tabel-tkl/(:num)','AdminC::coba/$1');
 
+$routes->get('/header','InjectData::header');
+$routes->get('/headeri','InjectData::isiCoba');
+$routes->get('/struktur-table','InjectData::Struktur');
+$routes->add('/struktur-table/add','InjectData::addStruktur');
+$routes->get('/struktur-table/delete','InjectData::deleteStruktur');
+$routes->add('/struktur-table/edit','InjectData::editStruktur');
+// $routes->add('/cobas','InjectData::cobaS');
+$routes->post('/Dashboard/add','InjectData::addForm');
+$routes->get('/lov/add','InjectData::addLov');
+
 
 /*
  * --------------------------------------------------------------------

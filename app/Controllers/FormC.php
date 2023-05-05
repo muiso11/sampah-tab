@@ -3,9 +3,11 @@
 namespace App\Controllers;
 
 use App\Models\FormModel;
+use App\Models\HeaderModel;
 use App\Models\KegiatanModel;
 use App\Models\LovModel;
 use App\Models\MesinModel;
+use Error;
 use Exception;
 
 
@@ -17,6 +19,7 @@ class FormC extends BaseController
     protected $get_status;
     protected $get_data;
     protected $lovModel;
+    protected $headerModel;
 
     public function __construct()
     {
@@ -24,6 +27,7 @@ class FormC extends BaseController
         $this->formModel = new FormModel();
         $this->kegiatanModel = new KegiatanModel();
         $this->lovModel = new LovModel();
+        $this->headerModel = new HeaderModel();
 
         // Untuk Mengecheck status pada table form apakah bernilai 1 dengan username yang sudah di set dengan session        
         $session_login = session()->get();        
@@ -33,13 +37,13 @@ class FormC extends BaseController
             // echo 'Message: ' .$e->getMessage();
             echo '<br><br>Mau Coba Hack Ya Bang? Balik dah ke Login';die;      
         }            
-            $this->get_data = $this->formModel->where($data)->findAll();   
-            foreach($this->get_data as $data){
-                $this->get_data = $data;
-            }
-            // var_dump($this->get_data);die;
-            $this->get_status = ($this->get_data == NULL ? 'nope': $this->get_data['status']);        
-            // var_dump($this->get_status);die;
+        $this->get_data = $this->formModel->where($data)->findAll();   
+        foreach($this->get_data as $data){
+            $this->get_data = $data;
+        }
+        // var_dump($this->get_data);die;
+        $this->get_status = ($this->get_data == NULL ? 'nope': $this->get_data['status']);        
+        // var_dump($this->get_status);die;
         
     }
     public function form()
@@ -47,13 +51,17 @@ class FormC extends BaseController
         if($this->get_status == 'nope'){            
             return redirect()->to('first');
         }        
-        $form_data = $this->get_data;        
-        // var_dump($form_data);die;
+        $form_data = $this->get_data;                
         $form = $this->formModel->getAll($form_data['nama'],$form_data['mesinID'],$form_data['status']);           
+        // var_dump($form);die;
         $lovs = $this->lovModel->findAll();        
+        $header = $this->headerModel->findAll(); 
+        // var_dump($header)       ;die;
         $data = [
             'tittle'    => 'Dashboard',
             'data_awal' => $this->get_data,
+            'header'    => $header,
+            'longkap'   => '0',
             'data_form'=> $form,
             'lovs' => $lovs        
         ];        
@@ -61,9 +69,9 @@ class FormC extends BaseController
         return   view('template/header',$data)
                 .view('template/sidebar')
                 .view('template/navbar')
-                .view('modals/addForm1',$data)
+                .view('modals/addFormV2',$data)
                 // .view('modals/edit_tkl',$data)
-                .view('pages/dashboard',$data)
+                .view('pages/formV2',$data)
                 .view('template/footer');
     }
 
@@ -72,8 +80,13 @@ class FormC extends BaseController
         $session_login = session()->get();
         // var_dump($this->request->getVar());die;
         $kode_kegiatan = $this->request->getVar('kode_keg');  
-        $form_data = $this->get_data;      
+        $form_data = $this->get_data;
+        // var_dump($form_data);die;
         if($kode_kegiatan == 7){
+            if($this->request->getVar('no_schedule') == $form_data['no_schedule'] ){
+                session()->setFlashdata('pesan','Data gagal ditambahkan');
+                return redirect()->to(base_url('form'));        
+            }
             $this->formModel->save([
                 'username'  => $session_login['username'],
                 'mesinID'   => $session_login['mesinID'],
@@ -93,27 +106,33 @@ class FormC extends BaseController
         $selesai = $this->request->getVar('selesai');
         $good = ($this->request->getVar('good') == NULL ? 0 : $this->request->getVar('good'));
         $defect = ($this->request->getVar('defect') == NULL ? 0 : $this->request->getVar('defect'));
-        
-        $this->kegiatanModel->save([
-            'mesinID'   => $session_login['mesinID'],
-            'kode_keg'   => $kode_kegiatan,
-            'dari'   => $dari,
-            'panggil_teknik'   => $panggil_teknik,
-            'datang_teknik'   => $datang_teknik,
-            'selesai'   => $selesai,
-            'durasi'   => $this->request->getVar('durasi'),
-            'aktivitas'   => $this->request->getVar('aktivitas'),
-            'masalah'   => $this->request->getVar('masalah'),
-            'tindakan'   => $this->request->getVar('tindakan'),
-            'no_schedule'   => $this->request->getVar('no_schedule'),
-            'kode_produk'   => $this->request->getVar('kode_produk'),
-            'batch'   => $this->request->getVar('batch'),
-            'good'   => $good,
-            'defect'   => $defect,
-        ]);
+                
+        try{
+            $this->kegiatanModel->save([
+                'mesinID'   => $session_login['mesinID'],
+                'kode_keg'   => $kode_kegiatan,
+                'dari'   => $dari,
+                'panggil_teknik'   => $panggil_teknik,
+                'datang_teknik'   => $datang_teknik,
+                'selesai'   => $selesai,
+                'durasi'   => $this->request->getVar('durasi'),
+                'aktivitas'   => $this->request->getVar('aktivitas'),
+                'masalah'   => $this->request->getVar('masalah'),
+                'tindakan'   => $this->request->getVar('tindakan'),
+                'no_schedule'   => $this->request->getVar('no_schedule'),
+                'kode_produk'   => $this->request->getVar('kode_produk'),
+                'batch'   => $this->request->getVar('batch'),
+                'good'   => $good,
+                'defect'   => $defect,
+            ]);
+            // var_dump("bisa");die;
+            session()->setFlashdata('pesan','Data berhasil ditambahkan');
+            return redirect()->to(base_url('form'));
+        }catch(Error $e){            
+            session()->setFlashdata('pesan','Data gagal ditambahkan, Harap periksa kembali inputan');
+            return redirect()->to(base_url('form'));
+        }        
 
-        session()->setFlashdata('pesan','Data berhasil ditambahkan');
-        return redirect()->to(base_url('form'));
     }
 
     public function formFix()

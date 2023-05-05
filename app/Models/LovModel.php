@@ -16,7 +16,7 @@ class LovModel extends Model{
     protected $returnType     = 'array';
     protected $useSoftDeletes = FALSE;
 
-    protected $allowedFields = ['kode_keg','aktivitas','durasi','mesinID'];
+    protected $allowedFields = ['kode_kegiatan','aktivitas','durasi','mesinID'];
 
     // Dates
     protected $useTimestamps = TRUE;
@@ -30,6 +30,15 @@ class LovModel extends Model{
         $builder->select('kode_keg, aktivitas, durasi, kode_mesin');
         $builder->join('mesin', 'mesin.mesinID = lov.mesinID','LEFT');
         $builder->where('lov.mesinID',$mesin);
+        // $builder->where('kode_mesin','all');
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+    public function getMesin()
+    {
+        $builder = $this->db->table('lov');
+        $builder->select('lov.id,kode_kegiatan, aktivitas, durasi, nama_mesin');
+        $builder->join('mesin', 'mesin.mesinID = lov.mesinID','LEFT');        
         // $builder->where('kode_mesin','all');
         $query = $builder->get();
         return $query->getResultArray();

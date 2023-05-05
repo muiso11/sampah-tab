@@ -16,9 +16,8 @@
                     <div class="col-12">                        
                         <div class="add-button d-flex justify-content-center">
                             <!-- Trigger Modal -->
-                            <button type="button" class="btn btn-primary mb-3" data-toggle="modal"
-                                data-target="#tambahData">Tambah
-                                Data</button>
+                            <button type="button" id="dash" class="btn btn-primary mb-3" data-toggle="modal"
+                                data-target="#<?=$tittle?>">Tambah Data</button>
                             <!-- <a href="isi_form"><button type="button" class="btn btn-primary mb-3">Tambah Data</button></a> -->
                         </div>
                     </div>
@@ -29,23 +28,12 @@
                             <div class="table-responsive">
                                 <table class="table text-center">
                                     <thead class="text-uppercase bg-primary">
-                                        <tr class="text-white">   
+                                        <tr class="text-white">  
                                             <th scope="col">No</th>                                         
-                                            <th scope="col">Kode Keg</th>
-                                            <th scope="col">Dari Jam</th>
-                                            <th scope="col">Panggil Teknik</th>
-                                            <th scope="col">Teknik Datang</th>
-                                            <th scope="col">Sampai Jam</th>
-                                            <th scope="col">Durasi (Menit)</th>
-                                            <th scope="col">Aktivitas Kegiatan</th>
-                                            <th scope="col">Masalah</th>
-                                            <th scope="col">Tindakan</th>
-                                            <th scope="col">Nomor Schedule</th>
-                                            <th scope="col">Kode Produk</th>
-                                            <th scope="col">Batch Number</th>
-                                            <th scope="col">Good</th>
-                                            <th scope="col">Defect</th>                                            
-                                            <th scope="col">Kegiatan</th>
+                                            <?php foreach($header as $data) :?> 
+                                                <th scope="col"><?=$data['nama_header']?></th>
+                                            <?php endforeach;?>                                                                                   
+                                            <th scope="col">Kegiatan</th> 
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -57,11 +45,14 @@
                                                         <?php $j++;?>                                                        
                                                         <?php continue?>
                                                     <?php else :?>
-                                                        <td><?= ($data);?></td>
+                                                        <td><?= ($data != NULL ? $data : '-');?></td>
                                                     <?php endif;?>
                                                 <?php endforeach;?>
-                                                <td>                                                
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <button type="button" class="btn btn-danger mb-3 mr-2" data-toggle="modal" data-target="#edit?<?= $datas['id'];?>>">Hapus</button>                                                    
                                                         <button type="button" class="btn btn-warning mb-3" data-toggle="modal" data-target="#edit?<?= $datas['id'];?>>">Edit Data</button>                                                    
+                                                    </div>                                                
                                                 </td>
                                             </tr>                                                   
                                         <?php endforeach;?>

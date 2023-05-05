@@ -15,12 +15,20 @@ class Kegiatan extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            'created_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],        
+            'updated_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],
             'mesinID' => [
                 'type'          => 'INT',
                 'constraint'     => 2,
                 'null'         => FALSE,
             ],                        
-            'kode_keg' => [
+            'kode_kegiatan' => [
                 'type'          => 'VARCHAR',
                 'constraint'    => 1,
                 'null'         => false,
@@ -62,7 +70,7 @@ class Kegiatan extends Migration
             'no_schedule' => [
                 'type'          => 'VARCHAR',                
                 'constraint'    => 10,
-                'null'         => true,                
+                'null'         => false,                
             ],
             'batch' => [
                 'type'          => 'VARCHAR',                
@@ -83,15 +91,7 @@ class Kegiatan extends Migration
                 'type'          => 'INT',                
                 'constraint'    => 11,
                 'null'         => true,                
-            ],
-            'created_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ],        
-            'updated_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ]        
+            ],                    
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('kegiatan');

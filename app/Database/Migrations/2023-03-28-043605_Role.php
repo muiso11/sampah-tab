@@ -14,6 +14,14 @@ class Role extends Migration
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
+            ],
+            'created_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
+            ],        
+            'updated_at' => [
+                'type'  => 'DATETIME',
+                'null'  => true
             ],                        
             'role' => [
                 'type'          => 'VARCHAR',                
@@ -24,15 +32,7 @@ class Role extends Migration
                 'type'          => 'VARCHAR',
                 'constraint'    => 255,
                 'null'         => FALSE,
-            ],                                                
-            'created_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ],        
-            'updated_at' => [
-                'type'  => 'DATETIME',
-                'null'  => true
-            ]        
+            ],                                                                    
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('role');
