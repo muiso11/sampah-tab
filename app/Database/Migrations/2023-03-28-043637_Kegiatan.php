@@ -28,6 +28,10 @@ class Kegiatan extends Migration
                 'constraint'     => 2,
                 'null'         => FALSE,
             ],                        
+            'joinkeg' => [
+                'type'          => 'VARCHAR',                
+                'null'         => FALSE,
+            ],                        
             'kode_kegiatan' => [
                 'type'          => 'VARCHAR',
                 'constraint'    => 1,
@@ -72,16 +76,16 @@ class Kegiatan extends Migration
                 'constraint'    => 10,
                 'null'         => false,                
             ],
-            'batch' => [
-                'type'          => 'VARCHAR',                
-                'constraint'    => 10,
-                'null'         => true,                
-            ],
             'kode_produk' => [
                 'type'          => 'VARCHAR',                
                 'constraint'    => 10,
                 'null'         => true,                
             ],
+            'batch' => [
+                'type'          => 'VARCHAR',                
+                'constraint'    => 10,
+                'null'         => true,                
+            ],            
             'good' => [
                 'type'          => 'INT',                
                 'constraint'    => 11,

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\FormModel;
+use App\Models\HeaderModel;
 use App\Models\KegiatanModel;
 use App\Models\LovModel;
 use App\Models\MesinModel;
@@ -14,6 +15,7 @@ class AdminC extends BaseController
     protected $kegiatanModel;
     protected $get_status;
     protected $lovModel;
+    protected $headerModel;
 
     public function __construct()
     {
@@ -21,6 +23,7 @@ class AdminC extends BaseController
         $this->formModel = new FormModel();
         $this->kegiatanModel = new KegiatanModel();
         $this->lovModel = new LovModel();         
+        $this->headerModel = new HeaderModel();         
     }
     public function index()
     {                      
@@ -37,12 +40,14 @@ class AdminC extends BaseController
                 .view('template/footer');
     }    
     public function coba($mesinID)
-    {        
-        $mesin = $this->formModel->getAll($mesinID);   
+    {                
+        $form = $this->formModel->getAll($mesinID);   
+        $header = $this->headerModel->findAll();
         $session_login = session()->get();                
         $data = [
             'tittle'    => 'halo',  
-            "data_mesin"=> $mesin,
+            'header'    => $header,
+            "data_form"=> $form,            
             'session' => $session_login['role']
         ];
         return   view('template/header',$data)

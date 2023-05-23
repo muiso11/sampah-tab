@@ -173,6 +173,7 @@ class FormC extends BaseController
     public function firstAdd()
     {
         $session_login = session()->get();
+        $joinkeg = str_replace('-','',$this->request->getVar('tanggal')).$this->request->getVar('shift').$this->request->getVar('no_schedule');        
         $this->formModel->save([
             'username'  => $session_login['username'],
             'mesinID'   => $session_login['mesinID'],
@@ -182,7 +183,8 @@ class FormC extends BaseController
             'no_schedule'   => $this->request->getVar('no_schedule'),
             'kode_produk'   => $this->request->getVar('kode_produk'),
             'batch'   => $this->request->getVar('batch'),
-            'status' => FALSE
+            'status' => FALSE,
+            'joinkeg' => $joinkeg
         ]);
         session()->setFlashdata('pesan','Data berhasil ditambahkan');
         return redirect()->to(base_url('form'));

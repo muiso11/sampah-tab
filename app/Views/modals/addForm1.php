@@ -81,39 +81,37 @@
                                 <label for="example-text-input" class="col-form-label">Tindakan</label>
                                 <input class="form-control" type="text" id="tindakan" name="tindakan">                                        
                             </div>                                    
-                        </div>  
-                                                   
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="col-form-label">No Schedule</label>
-                                        <input class="form-control" type="text" name="no_schedule" id="no_schedule" value="<?=$data_awal['no_schedule']?>" disabled>
-                                    </div>                                    
-                                </div> 
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="col-form-label">Kode Produk</label>
-                                        <input class="form-control" type="text" name="kode_produk" id="kode_produk" value="<?=$data_awal['kode_produk']?>" disabled>                                        
-                                    </div>                                    
-                                </div> 
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="col-form-label">Batch Number</label>
-                                        <input class="form-control" type="text" name="batch" id="batch" value="<?=$data_awal['batch']?>" disabled>                                        
-                                    </div>                                    
-                                </div> 
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="col-form-label">Good</label>
-                                        <input class="form-control" type="text" id="good" name="good" value="0">                                        
-                                    </div>                                    
-                                </div> 
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="example-text-input" class="col-form-label">Defect</label>
-                                        <input class="form-control" type="text" id="defect" name="defect" value="0">                                        
-                                    </div>                                    
-                                </div>                             
-                         
+                        </div>                                                     
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="example-text-input" class="col-form-label">No Schedule</label>
+                                <input class="form-control" type="text" name="no_schedule" id="no_schedule" value="<?=$data_awal['no_schedule']?>" disabled>
+                            </div>                                    
+                        </div> 
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="example-text-input" class="col-form-label">Kode Produk</label>
+                                <input class="form-control" type="text" name="kode_produk" id="kode_produk" value="<?=$data_awal['kode_produk']?>" disabled>                                        
+                            </div>                                    
+                        </div> 
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="example-text-input" class="col-form-label">Batch Number</label>
+                                <input class="form-control" type="text" name="batch" id="batch" value="<?=$data_awal['batch']?>" disabled>                                        
+                            </div>                                    
+                        </div> 
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="example-text-input" class="col-form-label">Good</label>
+                                <input class="form-control" type="text" id="good" name="good" value="0">                                        
+                            </div>                                    
+                        </div> 
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="example-text-input" class="col-form-label">Defect</label>
+                                <input class="form-control" type="text" id="defect" name="defect" value="0">                                        
+                            </div>                                    
+                        </div>                                                      
                     </div>  
 
                     <button type="submit" name="submit"  onclick="enableAndSubmit()" id="submit">SUBMIT</button>                        

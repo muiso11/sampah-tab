@@ -32,6 +32,7 @@ class InjectData extends BaseController
     protected $db;   
     protected $gSheets;
     protected $idSheets;
+    protected $get_datas;
     protected $get_data;
     protected $get_status;
     use ResponseTrait;
@@ -59,13 +60,267 @@ class InjectData extends BaseController
             // echo 'Message: ' .$e->getMessage();
             echo '<br><br>Mau Coba Hack Ya Bang? Balik dah ke Login';die;      
         }            
-        $this->get_data = $this->formModel->where($data)->findAll();   
-        foreach($this->get_data as $data){
+        $this->get_datas = $this->formModel->where($data)->findAll();   
+        foreach($this->get_datas as $data){
             $this->get_data = $data;
         }
+        
         // var_dump($this->get_data);die;
         $this->get_status = ($this->get_data == NULL ? 'nope': $this->get_data['status']);        
-        // var_dump($this->get_status);die;
+        // var_dump($this->get_status);die;        
+    }
+    public function cobaFix()
+    {        
+        foreach($this->get_datas as $data){
+            $this->formModel->update($data['id'],['status' => TRUE]);
+        }
+        session()->setFlashdata('pesan','Gagal Input Ke Spreadsheet, Silahkan Segera Check Spreadsheet');
+        return redirect()->to(base_url('DashboardV3'));
+
+    }
+    public function cobaDelete()
+    {
+        try{
+            $form_data = $this->get_data;            
+            $nomor = $this->request->getVar('nomor');
+            $oldJoin = $this->request->getVar('oldJoin');
+            
+            $checkJoin = count($this->formModel->getData($oldJoin,FALSE));
+            $countData = count($this->formModel->getAll($form_data['mesinID'],FALSE));
+
+            $sheet = $this->mesinModel->find($form_data['mesinID']);
+            $range = $sheet['totalRow'] - $countData + $nomor - 2;
+
+            $this->formModel->deleteData('kegiatan',$this->request->getVar('oldID'));
+            $this->gSheets->deleteCells($this->idSheets,$range);
+            $this->mesinModel->update($sheet['mesinID'],['totalRow' => $sheet['totalRow']-1] );
+            if($checkJoin == 1){
+                $this->formModel->deleteData('form',$form_data['id']);
+            }
+
+        }catch(Error $e){
+            var_dump("GAGAL".$e);
+        }
+    }   
+    
+    public function cobaFixWithEdit()
+    {        
+        $headerName = ['tanggal','shift','nama'];
+        
+        $headersName = $this->headerModel->findAll();                
+        foreach($headersName as $name){
+            array_push($headerName,'kegiatan.'.$name['nama_header']);
+        }
+        $dataKegiatan = $this->formModel->savedAll($headerName,$this->get_data['mesinID']);    
+
+        $datas = [
+            'tanggal'   => $this->request->getVar('tanggal'),
+            'nama'      => $this->request->getVar('nama'),
+            'shift'     => $this->request->getVar('shift'),
+            'status'    => FALSE,
+        ];
+        foreach($this->get_datas as $data){
+            $this->formModel->update($data['id'],$datas);
+        }
+        $noCol = 2;
+        foreach($dataKegiatan as $dataskeg){
+            $noCell = 0;            
+            foreach($dataskeg as $data){
+                $this->gSheets->appendValues($this->idSheets,'Sheet1!'.chr(65+$noCell).$noCol,'RAW',[$data]);
+                $noCell = $noCell + 1;   
+                sleep(1);
+            } 
+            // sleep(2);
+            $noCol++;
+            if($noCol == 8){
+                break;
+            }
+        }        
+    }
+    public function cobaEdit()
+    {                            
+        try{                        
+            $form_data = $this->get_data;
+            $oldID = $this->request->getVar('old_id');
+            $oldJoinkeg = $this->request->getVar('joinkeg');
+            $idForm = $this->formModel->where(['joinkeg' => $oldJoinkeg, 'status' => FALSE])->findAll();               
+            $kode_kegiatan = $this->request->getVar('kode_kegiatan');
+            $newNo = $this->request->getVar('newNo');
+            $newKode = $this->request->getVar('newKode');
+            $newBatch = $this->request->getVar('newBatch');               
+            $nomorData = $this->request->getVar('nomor');
+            $noSche = $this->request->getVar('no_schedule');
+            $sheet = $this->mesinModel->find($form_data['mesinID']);            
+            $countData = count($this->formModel->getAll($form_data['mesinID'],FALSE));
+            $range = $sheet['totalRow'] - $countData + $nomorData - 1;                        
+            $totalRow = $sheet['totalRow'] - $countData;            
+            $fix_save = [];
+            $newData = [];
+            $newjoinkeg = str_replace('-','',$form_data['tanggal']).$form_data['shift'].$newNo;
+            
+            if($kode_kegiatan == "Pilih" || ($noSche == "Pilih" && $newNo == NULL && $newKode == NULL && $newBatch == NULL)){
+                session()->setFlashdata('pesan','Silahkan pilih Kode Kegiatan dan No Schedule dengan benar');
+                return redirect()->to(base_url('DashboardV3'));
+            }elseif(isset($newNo,$newKode,$newBatch)){
+                $kegiatanDB = $this->kegiatanModel->where('joinkeg',$oldJoinkeg)->findAll();
+                $newDataSheet = [                    
+                    ($newNo == NULL? $kegiatanDB[0]['no_schedule'] : $newNo ),
+                    ($newKode == NULL? $kegiatanDB[0]['kode_produk'] : $newKode ),
+                    ($newBatch == NULL? $kegiatanDB[0]['batch'] : $newBatch ),                    
+                ];                
+                $newDataKegiatan = [
+                    'no_schedule'   => ($newNo == NULL? $kegiatanDB[0]['no_schedule'] : $newNo ),
+                    'kode_produk'   => ($newKode == NULL? $kegiatanDB[0]['kode_produk'] : $newKode ),
+                    'batch'         => ($newBatch == NULL? $kegiatanDB[0]['batch'] : $newBatch ),
+                    'joinkeg'       => ($newNo == NULL? $oldJoinkeg : $newjoinkeg),
+                ];
+                
+                foreach($this->get_datas as $data){                                  
+                    if($data['joinkeg'] == $this->request->getVar('joinkeg')){
+                        $getdatas = $this->formModel->getData($this->request->getVar('joinkeg'));
+                        foreach($getdatas as $getdata){                            
+                            $this->kegiatanModel->update($getdata['id'],$newDataKegiatan);
+                            $this->gSheets->valueUpdate($sheet['sheetID'],$sheet['nama_sheet'].'!M'.$totalRow.':O'.$totalRow,'RAW',$newDataSheet);
+                            $totalRow++;                        
+                        }
+                        break;
+                    }
+                    $totalRow = $totalRow + count($this->formModel->getData($this->request->getVar('joinkeg'))) + 1;                    
+                }
+                $this->formModel->update($idForm[0]['id'],$newDataKegiatan);
+                $newData = array_merge($newData,$newDataKegiatan);
+            }                        
+            $headers = $this->headerModel->findAll();                        
+            foreach($headers as $header){
+                $key = $header['nama_header']; $value = (strlen($this->request->getVar($key)) == 0 ? NULL:$this->request->getVar($key));
+    
+                $save_data = array($key => $value);
+                $fix_save = array_merge($fix_save, $save_data);
+            }
+            $fix_save = array_merge($fix_save,$newData);                        
+            $this->kegiatanModel->update($oldID,$fix_save);                              
+            unset($fix_save['joinkeg']);
+            $front_data = [
+                'tanggal'   => $form_data['tanggal'],
+                'shift'     => $form_data['shift'],
+                'nama'      => $form_data['nama'],
+            ];
+            $fix_save = array_merge($front_data,$fix_save);            
+            $dataSheet = [];
+            foreach($fix_save as $save){  
+                $filterData = ($save != NULL? $save :'');
+                array_push($dataSheet,$filterData);
+            }            
+            $pushSpreadsheet = $this->gSheets->valueUpdate($sheet['sheetID'],$sheet['nama_sheet'].'!A2:'.chr(65 + count($headers)+2).$range,'RAW',$dataSheet);
+            if($pushSpreadsheet == 'Success'){
+                session()->setFlashdata('pesan','Gagal Input Ke Spreadsheet, Silahkan Segera Check Spreadsheet');
+                return redirect()->to(base_url('DashboardV3'));
+            }else{
+                session()->setFlashdata('pesan','Data Berhasil Diubah Dengan Mulus');
+                return redirect()->to(base_url('DashboardV3'));
+            }
+            
+            
+
+        }catch(Error $e){
+            var_dump("Gagal" . $e);die;
+            session()->setFlashdata('pesan','Terdapat Kegagalan Pada System Atau Periksa Kembali Jaringan Anda');
+            return redirect()->to(base_url('DashboardV3'));
+        }
+    }
+    public function cobaAdd()
+    {                  
+        try{
+            $form_data = $this->get_data;              
+            $sheet = $this->mesinModel->find($form_data['mesinID']);            
+            $kode_kegiatan = $this->request->getVar('kode_kegiatan');            
+            $aktivitas = $this->request->getVar('aktivitas');            
+            $no_schedule = $this->request->getVar('no_schedule');            
+            $newNo = $this->request->getVar('newNo');
+            $newKode = $this->request->getVar('newKode');
+            $newBatch = $this->request->getVar('newBatch');            
+            $oldjoinkeg = $form_data['joinkeg'];
+            $newjoinkeg = str_replace('-','',$form_data['tanggal']).$form_data['shift'].$newNo;            
+
+            $fix_save = [
+                'mesinID'   => intval($form_data['mesinID']),            
+            ];
+                        
+            if(($kode_kegiatan == "Pilih") || ($no_schedule == "Pilih" && $kode_kegiatan != '7')){
+                session()->setFlashdata('pesan','Silahkan pilih kode kegiatan dengan benar atau No Schedule dengan benar');
+                return redirect()->to(base_url('DashboardV3'));
+            }elseif($newBatch != NULL && $newNo != NULL && $newKode != NULL){
+                $gbn = [                    
+                    'no_schedule'   =>  $newNo,
+                    'kode_produk'   =>  $newKode,
+                    'batch'         =>  $newBatch,
+                ];
+                $fix_save = array_merge($gbn,$fix_save);
+                $firstFormData = [
+                    'username'      => $this->get_data['username'],
+                    'mesinID'       => intval($this->get_data['mesinID']),
+                    'tanggal'       => $this->get_data['tanggal'],
+                    'nama'          => $this->get_data['nama'],
+                    'shift'         => $this->get_data['shift'],                    
+                    'status'        => FALSE,                    
+                    'joinkeg'       => $newjoinkeg,                    
+                ];
+                $save_form = array_merge($firstFormData,$gbn);                
+                $this->formModel->insert($save_form);
+
+                $joinkeg = ['joinkeg'   => $newjoinkeg];
+                $fix_save = array_merge($fix_save,$joinkeg);            
+            }elseif(isset($newBatch,$newNo,$newKode) && $aktivitas != 'cusu'){
+                session()->setFlashdata('pesan','Silahkan Isi No Schedule, Kode Produk, dan Batch Dengan Benar');
+                return redirect()->to(base_url('DashboardV3'));
+            }elseif($no_schedule == "Pilih"){
+                session()->setFlashdata('pesan','Silahkan Pilih No Schedule Dengan Benar');
+                return redirect()->to(base_url('DashboardV3'));
+            }else{
+                $joinkeg = ['joinkeg'   => $oldjoinkeg];
+                $fix_save = array_merge($fix_save,$joinkeg);
+            }
+            
+            // Untuk melakukan add data secara otomatis jika field berubah ubah                        
+            $headers = $this->headerModel->findAll();                        
+            foreach($headers as $header){
+                $key = $header['nama_header']; $value = (strlen($this->request->getVar($key)) == 0 ? NULL:$this->request->getVar($key));
+    
+                $save_data = array($key => $value);
+                $fix_save = array_merge($save_data, $fix_save);
+            }                       
+            $this->kegiatanModel->insert($fix_save);                
+            unset($fix_save['mesinID'],$fix_save['joinkeg']);
+            $fix_save = array_reverse($fix_save);
+            $front_data = [
+                'tanggal'   => $form_data['tanggal'],
+                'shift'     => $form_data['shift'],
+                'nama'      => $form_data['nama'],
+            ];
+            $fix_save = array_merge($front_data, $fix_save);
+            $dataSheet = [];
+            foreach($fix_save as $save){  
+                $filterData = ($save != NULL? $save :'');
+                array_push($dataSheet,$filterData);
+            }                        
+            $noCell = count($this->headerModel->findAll()) + 2;            
+            $this->gSheets->appendValues($sheet['sheetID'],$sheet['nama_sheet'].'!A'.$sheet['totalRow'].':'.chr(65 + $noCell).$sheet['totalRow'],'RAW',$dataSheet);            
+            $totalRow = [
+                'totalRow' => intval($sheet['totalRow']) + 1,
+            ];
+            $this->mesinModel->update($form_data['mesinID'],$totalRow);
+            
+            // die;
+            session()->setFlashdata('pesan','Sukses Menambahkan Data');
+            return redirect()->to(base_url('DashboardV3'));
+        }catch(Error $e){            
+            session()->setFlashdata('pesan','ERROR! Data Gagal Ditambahkan');
+            return redirect()->to(base_url('DashboardV3'));
+        }
+    }
+    public function addLov()
+    {
+        
     }
     public function addForm()
     {
@@ -74,8 +329,8 @@ class InjectData extends BaseController
             $kode_kegiatan = $this->request->getVar('kode_kegiatan');
             $fix_save = [];
             if($kode_kegiatan == "Pilih"){
-                session()->setFlashdata('pesan','Silahkan pilih kode kegiatan dengan benar');
-                return redirect()->to(base_url('form'));
+                session()->setFlashdata('pesan','Silahkan masukkan kode kegiatan dengan benar');
+                return redirect()->to(base_url('DashboardV3'));
             }elseif($kode_kegiatan != 7){
                 $fix_save = [
                     'mesinID'       =>  $form_data['mesinID'],
@@ -95,11 +350,64 @@ class InjectData extends BaseController
                 $fix_save = array_merge($save_data,$fix_save); 
             }
             $this->kegiatanModel->insert($fix_save);                    
-            var_dump('berhasil');die;            
+            session()->setFlashdata('pesan','Data Berhasil Ditambahkan');
+            return redirect()->to(base_url('DashboardV3'));      
         }catch(Error){
 
         }
         
+    }
+    public function dashV3()
+    {   
+        // $totalRow = 6;
+        // $noCell = 17;
+        // $coba = ['2023-05-17','1','Imam','2','07:56','','','07:57','1','Run','','','431221','KODES','12211','',''];
+        // var_dump($coba);die;
+        // $this->gSheets->appendValues($this->idSheets,'Sheet1!A'.$totalRow.':'.chr(65 + $noCell).$totalRow,'RAW',$coba);                   
+        // die;
+        if($this->get_status == 'nope'){            
+            return redirect()->to('first');
+        }                
+        $form_data = $this->get_data;                
+        $form = $this->formModel->getAll(2,FALSE);
+        $lovs = $this->lovModel->findAll();        
+        $header = $this->headerModel->findAll();         
+        
+        if($form == NULL){
+            if($form_data['shift'] == 1){
+                $dari = '07:00:00';
+            }
+            elseif($form_data['shift'] == 2){
+                $dari = '15:30:00';
+            }
+            elseif($form_data['shift'] == 3){
+                $dari = '21:15:00';
+            }
+            else{
+                var_dump("Terjadi Kesalahan, Silahkan Hubungi Saya");die;
+            }
+        }else{
+            $change = array_reverse($form);
+            $dari = $change[0]['selesai'];
+        }
+        $data = [
+            'tittle'    => 'Dashboard',
+            'data_awal' => $this->get_data,
+            'header'    => $header,
+            'longkap'   => '0',
+            'data_form' => $form,
+            'data_awal' => $form_data,            
+            'dari'      => $dari
+        ];        
+                
+        return   view('template/header',$data)
+                .view('template/sidebar')
+                .view('template/navbar')
+                .view('modals/addFormV3',$data)
+                .view('coba/modals/deleteTklV3')
+                .view('coba/modals/editTklV3',$data)
+                .view('pages/formV2',$data)
+                .view('template/footer');
     }
     public function editStruktur()
     {
@@ -113,9 +421,9 @@ class InjectData extends BaseController
             $datas = 'col-6';
         }elseif($this->request->getVar('panjang_inputbox') == '5'){
             $datas = 'col-12';
-        }elseif($this->request->getVar('panjang_inputbox') != '5'){
-            session()->setFlashdata('pesan','Inputan Pada Panjang Inputbox Salah');
-            return redirect()->to(base_url('edit-struktur'));
+        }elseif($this->request->getVar('panjang_inputbox') != '5'){            
+            session()->setFlashdata('pesan','Isi Pada Panjang Input Box Salah');
+            return redirect()->to(base_url('struktur-table'));
         }
 
         $forge = $this->forge::forge();
@@ -150,10 +458,10 @@ class InjectData extends BaseController
             $this->headerModel->delete($id);
 
             session()->setFlashdata('pesan','Data berhasil dihapus');
-            return redirect()->to(base_url('edit-struktur'));
+            return redirect()->to(base_url('struktur-table'));
         }catch(ErrorException $e){
             session()->setFlashdata('pesan','Data gagal dihapus');
-            return redirect()->to(base_url('edit-struktur'));
+            return redirect()->to(base_url('struktur-table'));
         }
 
     }
@@ -175,7 +483,7 @@ class InjectData extends BaseController
             $datas = 'col-12';
         }elseif($this->request->getVar('panjang_inputbox') != '5'){
             session()->setFlashdata('pesan','Inputan Pada Panjang Inputbox Salah');
-            return redirect()->to(base_url('edit-struktur'));
+            return redirect()->to(base_url('struktur-table'));
         }        
         try{      
             // Untuk melakukan add data secara otomatis jika field berubah ubah
@@ -201,13 +509,13 @@ class InjectData extends BaseController
             $forge->addColumn('kegiatan',$fields);
             $this->headerModel->insert($fix_save);
 
-            $this->gSheets->valueUpdate($this->idSheets,'Sheet1!'.chr(68+count($this->headerModel->findAll())).'1','RAW',[$this->request->getVar('nama_header')]);
+            $this->gSheets->valueUpdate($this->idSheets,'Sheet1!'.chr(67+count($this->headerModel->findAll())).'1','RAW',[$this->request->getVar('nama_header')]);
 
             session()->setFlashdata('pesan','Data berhasil ditambahkan');
-            return redirect()->to(base_url('edit-struktur'));        
+            return redirect()->to(base_url('struktur-table'));        
         }catch(Error $e){
             session()->setFlashdata('pesan','Data gagal ditambahkan');
-            return redirect()->to(base_url('edit-struktur'));        
+            return redirect()->to(base_url('struktur-table'));        
         }        
     }
     public function Struktur()
@@ -230,7 +538,7 @@ class InjectData extends BaseController
         }        
         $lov_header = ['Kode Kegiatan','Aktivitas', 'Durasi','Mesin'];
         $data = [
-            'tittle'    => 'Edit-Struktur',            
+            'tittle'    => 'Struktur-Table',            
             'longkap'   => '5',
             'header'    => $header_data,
             'body'      => $header,
@@ -366,20 +674,20 @@ class InjectData extends BaseController
                 'panjang_inputbox'  => 'col-4',
                 'edit'              => FALSE
             ],[
-                'tipe'              => 'VARCHAR',
+                'tipe'              => 'OPTION',
                 'nama_header'       => 'no_schedule',
                 // 'panjang_karakter'  => 10,
                 'panjang_inputbox'  => 'col-2',
                 'edit'              => FALSE
             ],[
-                'tipe'              => 'VARCHAR',
-                'nama_header'       => 'batch',
+                'tipe'              => 'OPTION',
+                'nama_header'       => 'kode_produk',
                 // 'panjang_karakter'  => 10,
                 'panjang_inputbox'  => 'col-2',
                 'edit'              => FALSE
             ],[
-                'tipe'              => 'VARCHAR',
-                'nama_header'       => 'kode_produk',
+                'tipe'              => 'OPTION',
+                'nama_header'       => 'batch',
                 // 'panjang_karakter'  => 10,
                 'panjang_inputbox'  => 'col-2',
                 'edit'              => FALSE
@@ -413,31 +721,25 @@ class InjectData extends BaseController
         $mesin = [
             [
             'kode_mesin'=> 'all',                    
-            'nama_mesin'=> 'all'
+            'nama_mesin'=> 'all',
+            'nama_sheet'=> 'all',
+            'sheetID'   => 'all',
+            'gid'       => 'all',
+            'totalRow'  => 2
         ],[
             'kode_mesin'=> 'K21B',                    
-            'nama_mesin'=> 'IMA L11'            
+            'nama_mesin'=> 'IMA L11',
+            'nama_sheet'=> 'Sheet1',
+            'sheetID'   => '1oQN2C-Qa2KDOaADrfCO16OidIxOQiQBXX741KdtXNe0',
+            'gid'       => '0',
+            'totalRow'  => 2
         ],[
             'kode_mesin'=> 'K219',                    
-            'nama_mesin'=> 'HM3 L8A'
-        ],[
-            'kode_mesin'=> 'K219',                    
-            'nama_mesin'=> 'HM3 L8A'
-        ],[
-            'kode_mesin'=> 'K219',                    
-            'nama_mesin'=> 'HM3 L8A'
-        ],[
-            'kode_mesin'=> 'K219',                    
-            'nama_mesin'=> 'HM3 L8A'
-        ],[
-            'kode_mesin'=> 'K219',                    
-            'nama_mesin'=> 'HM3 L8A'
-        ],[
-            'kode_mesin'=> 'K219',                    
-            'nama_mesin'=> 'HM3 L8A'
-        ],[
-            'kode_mesin'=> 'K219',                    
-            'nama_mesin'=> 'HM3 L8A'
+            'nama_mesin'=> 'HM3 L8A',
+            'nama_sheet'=> '2020',
+            'sheetID'   => '1oQN2C-Qa2KDOaADrfCO16OidIxOQiQBXX741KdtXNe0',
+            'gid'       => '0',
+            'totalRow'  => 2            
             ]
         ];
         $role = [
@@ -569,7 +871,7 @@ class InjectData extends BaseController
         $mesin = $this->mesinModel->findAll();
         $role = $this->roleModel->findAll();
         $lov = $this->lovModel->getAll('K21B');
-        $halo = $this->formModel->getAll();
+        // $halo = $this->formModel->getAll(2,FALSE));
         $keg = $this->kegiatanModel->findAll();
         print_r($akun);
         echo '<br>';
@@ -579,7 +881,7 @@ class InjectData extends BaseController
         echo '<br>';
         print_r($lov);
         echo '<br>';
-        print_r($halo);
+        // print_r($halo);
         echo '<br>';
         print_r($keg);
         echo '<br>';
@@ -620,17 +922,22 @@ class InjectData extends BaseController
         //     }
         // }
         // var_dump($session_login);die;
-        // var_dump($dataku);die;
-        $dataku = $this->lovModel->findAll();
-        return $this->respond($dataku,200);
+        // var_dump($dataku);die;        
+        $data = [
+            'message'   => 'success',
+            'lov'       => $this->lovModel->findAll(),
+            // 'data'      => $this->get_data,
+            'form'      => $this->formModel->getNoSchedule(session()->get('mesinID')),
+        ];
+        return $this->respond($data,200);
     }
     public function form1()
     {
-        $mesin = $this->formModel->getAll();   
+        // $mesin = $this->formModel->getAll(2,FALSE));
         $lovs = $this->lovModel->findAll();        
         $data = [
             'tittle'    => 'Dashboard',
-            'data_mesin'=> $mesin,
+            // 'data_mesin'=> $mesin,
             'lovs' => $lovs        
         ];        
                 
@@ -644,11 +951,11 @@ class InjectData extends BaseController
     }
     public function form2()
     {
-        $mesin = $this->formModel->getAll();   
+        // $mesin = $this->formModel->getAll(2,FALSE));
         $lovs = $this->lovModel->findAll();        
         $data = [
             'tittle'    => 'Dashboard',
-            'data_mesin'=> $mesin,
+            // 'data_mesin'=> $mesin,
             'lovs' => $lovs        
         ];        
                 
@@ -663,11 +970,11 @@ class InjectData extends BaseController
     }
     public function form3()
     {
-        $mesin = $this->formModel->getAll();   
+        // $mesin = $this->formModel->getAll(2,FALSE));
         $lovs = $this->lovModel->findAll();        
         $data = [
             'tittle'    => 'Dashboard',
-            'data_mesin'=> $mesin,
+            // 'data_mesin'=> $mesin,
             'lovs' => $lovs        
         ];        
                 

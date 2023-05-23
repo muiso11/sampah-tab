@@ -5,7 +5,7 @@
             <div class="card-body">
                 <div class="row no-gutters">
                     <div class="col-12">   
-                        <form action="/first/add" method="POST">                        
+                        <form action="/first/add" method="POST" id="form" onsubmit="return submitForm()">                        
                             <div class="form-group">
                                 <label for="tanggal"
                                     class="col-form-label">Tanggal</label>
@@ -41,7 +41,7 @@
                                 <input class="form-control" type="text" value="1242132"
                                     id="batch" name="batch">
                             </div>                        
-                            <button type="submit" name="submit" id="submit">SUBMIT</button>
+                            <button type="submit" name="submit" id="firstForm">SUBMIT</button>
                         </form>
                     </div>
                 </div>
@@ -49,3 +49,10 @@
         </div>
     </div>
 </div>
+<script>
+    function submitForm() {
+        var submitButton = document.getElementById("firstForm");        
+        submitButton.disabled = true;
+        return true; // Proceed with form submission
+    }
+</script>

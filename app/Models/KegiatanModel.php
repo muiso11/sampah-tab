@@ -19,7 +19,11 @@ class KegiatanModel extends Model{
 
     public function __construct()
     {        
+        parent::__construct();
+        $db = \Config\Database::connect();
+        $this->builder = $db->table('kegiatan');
         $db = db_connect();
+
         // $query = $db->query('SELECT * FROM coba');
         $nama = $db->getFieldNames('kegiatan');
         // $fields = array();
@@ -27,5 +31,5 @@ class KegiatanModel extends Model{
             array_push($this->allowedFields,$nama[$i]);
         }        
         // var_dump($this->allowedFields);die;
-    }
+    }    
 }

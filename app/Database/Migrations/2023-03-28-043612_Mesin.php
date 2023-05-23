@@ -24,15 +24,31 @@ class Mesin extends Migration
                 'null'  => true
             ],
             'kode_mesin' => [
-                'type'          => 'VARCHAR',
-                'constraint'     => 20,
+                'type'         => 'VARCHAR',
+                'constraint'   => 20,
                 'null'         => FALSE,
             ],            
             'nama_mesin' => [
-                'type'          => 'VARCHAR',
-                'constraint'    => 100,
+                'type'         => 'VARCHAR',
+                'constraint'   => 100,
                 'null'         => FALSE,
             ],                                                                    
+            'nama_sheet' => [
+                'type'         => 'VARCHAR',                
+                'null'         => FALSE,
+            ],
+            'sheetID' => [
+                'type'         => 'TEXT',                
+                'null'         => FALSE,
+            ],
+            'gid' => [
+                'type'         => 'VARCHAR',                
+                'null'         => FALSE,
+            ],
+            'totalRow' => [
+                'type'         => 'INT',                
+                'null'         => FALSE,
+            ],                                                                                                                                      
         ]);
         $this->forge->addKey('mesinID', true);
         $this->forge->createTable('mesin');

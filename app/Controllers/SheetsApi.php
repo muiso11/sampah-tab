@@ -51,11 +51,15 @@ class SheetsApi extends BaseController
                 'valueInputOption' => $valueInputOption
             ];
             $result =$this->sheetGoogle->spreadsheets_values->append($spreadsheetId, $range, $body, $params);    
+            // printf("%d cells updated.");
+            // return $result;            
             return json_encode([
                 'status'=> true,
                 'data' => $result
             ]);
-        } catch (GlobalException $e) {
+        } catch (GlobalException $e) {            
+            // printf("GAGAL updated. ". $e);
+            // return $result;
             return json_encode([
                 'status'=> false,
                 'data' => $e->getMessage()
@@ -74,25 +78,22 @@ class SheetsApi extends BaseController
                   'properties' => [
                       'title' => $title
                     ],
-                    'fields' => 'title'
-              ]
-          ]),
-          $req = new Request([
-              'findReplace' => [
-                  'find' => $find,
-                  'replacement' => $replacement,
-                  'allSheets' => true
-                  ]
-                  ])
-                ];
-                $batchUpdateRequest = new BatchUpdateSpreadsheetRequest([
-                    'requests' => $requests
-                ]);
-            $response = $this->sheetGoogle->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);
-            $findReplaceResponse = $response->getReplies()[1]->getFindReplace();
-            printf("%s replacements made.\n",
-            $findReplaceResponse->getOccurrencesChanged());
-            return $response;
+                'fields' => 'title'
+                ]
+            ]),
+            $req = new Request([
+                'findReplace' => [
+                    'find' => $find,
+                    'replacement' => $replacement,
+                    'allSheets' => true
+                    ]
+                ])
+            ];
+
+            $batchUpdateRequest = new BatchUpdateSpreadsheetRequest([
+                'requests' => $requests
+            ]);
+            $response = $this->sheetGoogle->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);            
         }    
         catch(GlobalException $e) {
             // TODO(developer) - handle error appropriately
@@ -115,12 +116,42 @@ class SheetsApi extends BaseController
             //executing the request
             $result = $this->sheetGoogle->spreadsheets_values->update($spreadsheetId, $range,
             $body, $params);
-            printf("%d cells updated.", $result->getUpdatedCells());
-            return $result;
+            $result->getUpdatedCells();
+            // printf("%d cells updated.", $result->getUpdatedCells());
+            // return $result;
+            return "Success";
+            
         }
+        catch(GlobalException $e) {
+            return "Failed".$e;
+            // TODO(developer) - handle error appropriately
+            // printf("GAGAL" .$e);
+            // echo 'Message: ' .$e->getMessage();
+        }
+    }   
+    function deleteCells($spreadsheetId, $noCell){           
+        try{            
+            $requests = [
+                new Request([
+                    'deleteDimension' => [
+                        'range' => [
+                            "sheetId" => 0,
+                            "dimension" => "ROWS",
+                            "startIndex" => $noCell-1,
+                            "endIndex" => $noCell,
+                        ]                    
+                    ]
+                ])
+            ];            
+
+            $batchUpdateRequest = new BatchUpdateSpreadsheetRequest([
+                'requests' => $requests
+            ]);
+            $response = $this->sheetGoogle->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);            
+        }    
         catch(GlobalException $e) {
             // TODO(developer) - handle error appropriately
             echo 'Message: ' .$e->getMessage();
         }
-    }   
+    }
 }

@@ -23,6 +23,10 @@ class Form extends Migration
                 'type'  => 'DATETIME',
                 'null'  => true
             ],   
+            'joinkeg' => [
+                'type'  => 'VARCHAR',
+                'null'  => true
+            ],   
             'username' => [
                 'type'          => 'VARCHAR',
                 'constraint'    => 50,
@@ -36,16 +40,7 @@ class Form extends Migration
             'tanggal' => [
                 'type'          => 'DATE',
                 'null'         => FALSE,                
-            ],
-            'nama' => [
-                'type'          => 'VARCHAR',
-                'constraint'    => 50,
-                'null'         => FALSE,
-            ],             
-            'shift' => [
-                'type'          => 'TINYINT',                
-                'null'         => FALSE,
-            ],                             
+            ],                                        
             'no_schedule' => [
                 'type'          => 'VARCHAR',                
                 'constraint'    => 20,
@@ -64,7 +59,16 @@ class Form extends Migration
             'status' => [
                 'type'          => 'BOOLEAN',                
                 'null'         => FALSE,
-            ],                       
+            ],
+            'nama' => [
+                'type'          => 'VARCHAR',
+                'constraint'    => 50,
+                'null'         => FALSE,
+            ],             
+            'shift' => [
+                'type'          => 'TINYINT',                
+                'null'         => FALSE,
+            ],                        
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('form');

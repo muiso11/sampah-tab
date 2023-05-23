@@ -18,25 +18,25 @@
                     <form action="/<?=$tittle?>/add" method="POST">                            
                     <div class="row d-flex justify-content-center">      
                         <?php $j=0; foreach($header as $datas) : ?>                                                
-                            <?php if( $j < $longkap):?>                                                                                                                
+                            <?php if( $j < $longkap):?>
                                 <?php $j++; continue;?>
                             <?php else :?>
                                 <div class="<?=$datas['panjang_inputbox']?>">                            
                                     <div class="form-group">
                                         <label for="<?=$datas['nama_header']?>" class="col-form-label"><?=strtoupper(str_replace('_',' ',$datas['nama_header']));?></label>
                                         <?php if($datas['tipe'] == 'OPTION') : ?>
-                                            <select class="form-control" style="height: 47px;" id="<?=$datas['nama_header']?>" name="<?=$datas['nama_header']?>">                                                                                                                                           
+                                            <select class="form-control" style="height: 47px;" id="<?=$datas['nama_header']?>" name="<?=$datas['nama_header']?>">
                                             </select>
                                         <?php elseif($datas['tipe'] == 'TIME'):?>
-                                            <input class="form-control" type="time" id="<?=$datas['nama_header']?>" name="<?=$datas['nama_header']?>" value="<?=date('H:i')?>">    
+                                            <input class="form-control" type="time" id="<?=$datas['nama_header']?>" name="<?=$datas['nama_header']?>" value="<?=date('H:i')?>">
                                         <?php else:?>                                            
-                                            <input class="form-control" type="text" id="<?=$datas['nama_header']?>" name="<?=$datas['nama_header']?>">    
+                                            <input class="form-control" type="text" id="<?=$datas['nama_header']?>" name="<?=$datas['nama_header']?>">
                                         <?php endif;?>
                                     </div>
                                 </div>
                                 
                             <?php endif;?>
-                        <?php endforeach;?>                                                                                                                     
+                        <?php endforeach;?>
                     </div>  
                     <button type="submit" name="submit" id="submit" onclick="enableAndSubmit()">SUBMIT</button>                        
                 </form>
@@ -67,9 +67,10 @@
     
         
         function displayProducts(data) {
-                data.forEach(product => displayProduct(product));
+                data.lov.forEach(product => displayProduct(product));
         }    
         function displayProduct(product) {
+            console.log(product);
             // Ini untuk menambah option Pilih kategori karena option di HTML akan otomatis hilang
             if(kode_sebelum == 0){
                 // hilang karena pembuatan option pada const (syntax dibawah)
@@ -117,7 +118,7 @@
     
             // Untuk melakukan perulangan data yang diambil dari API
             function displayProducts(data) {
-                    data.forEach(product => displayProduct(product));
+                    data.lov.forEach(product => displayProduct(product));
             }
             
             function displayProduct(product) {

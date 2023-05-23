@@ -16,7 +16,7 @@ class MesinModel extends Model{
     protected $returnType     = 'array';
     protected $useSoftDeletes = FALSE;
 
-    protected $allowedFields = ['kode_mesin','nama_mesin'];
+    protected $allowedFields = ['kode_mesin','nama_mesin','nama_sheet','sheetID','gid','totalRow'];
 
     // Dates
     protected $useTimestamps = TRUE;

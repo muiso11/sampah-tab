@@ -66,12 +66,20 @@ $routes->get('/tabel-tkl/(:num)','AdminC::coba/$1');
 $routes->get('/header','InjectData::header');
 $routes->get('/headeri','InjectData::isiCoba');
 $routes->get('/struktur-table','InjectData::Struktur');
-$routes->add('/struktur-table/add','InjectData::addStruktur');
-$routes->get('/struktur-table/delete','InjectData::deleteStruktur');
-$routes->add('/struktur-table/edit','InjectData::editStruktur');
+$routes->add('/Struktur-Table/add','InjectData::addStruktur');
+$routes->get('/Struktur-Table/delete','InjectData::deleteStruktur');
+$routes->add('/Struktur-Table/edit','InjectData::editStruktur');
 // $routes->add('/cobas','InjectData::cobaS');
 $routes->post('/Dashboard/add','InjectData::addForm');
+
+$routes->get('/DashboardV3','InjectData::dashV3');
 $routes->get('/lov/add','InjectData::addLov');
+$routes->add('/coba/add','InjectData::cobaAdd');
+$routes->add('/coba/edit','InjectData::cobaEdit');
+$routes->add('/coba/fix','InjectData::cobaFix');
+$routes->add('/coba/delete','InjectData::cobaDelete');
+$routes->add('/dd','InjectData::deleteCell');
+
 
 
 /*
